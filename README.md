@@ -200,7 +200,7 @@ python app.py
 - جستجو در دوره ها
 ### ساختار پایگاه داده 🗄️
 پی دی اف زیر را مشاهده کنید: 
-[دانلود مستندات PDF]([https://github.com/zahramoghaddasi/language_school-Project/tree/main/language_school/data](https://github.com/zahramoghaddasi/language_school-Project/blob/main/language_school/data/4th%20phase.pdf))
+[دانلود مستندات PDF](https://github.com/zahramoghaddasi/language_school-Project/tree/main/language_school/data](https://github.com/zahramoghaddasi/language_school-Project/blob/main/language_school/data/4th%20phase.pdf))
 ### ساختار پروژه 🔧
 ```text
 language_school/
