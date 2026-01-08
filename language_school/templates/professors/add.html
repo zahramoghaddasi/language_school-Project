@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>افزودن استاد جدید</title>
+    <style>
+        body { font-family: Tahoma; background: #f5f5f5; margin: 0; padding: 0; }
+        .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+        .form-container { max-width: 500px; margin: 30px auto; background: white; padding: 30px; border-radius: 10px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-back { background: #7f8c8d; color: white; text-decoration: none; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>➕ افزودن استاد جدید</h1>
+    </div>
+    
+    <div class="form-container">
+        <form method="POST">
+            <div class="form-group">
+                <label>نام:</label>
+                <input type="text" name="first_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label>نام خانوادگی:</label>
+                <input type="text" name="last_name" required>
+            </div>
+            
+            <div class="form-group">
+                <label>تخصص:</label>
+                <input type="text" name="specialty" required>
+            </div>
+            
+            <div class="form-group">
+                <label>شماره تلفن:</label>
+                <input type="text" name="phone_number" required>
+            </div>
+            
+            <div class="form-group">
+                <label>ایمیل:</label>
+                <input type="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label>حقوق (تومان):</label>
+                <input type="number" name="salary" required>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn btn-primary">ذخیره استاد</button>
+                <a href="/professors" class="btn btn-back">انصراف</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>نتایج جستجو</title>
+    <style>
+        body { font-family: Tahoma; background: #f5f5f5; margin: 0; padding: 0; }
+        .header { background: #e67e22; color: white; padding: 20px; text-align: center; }
+        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; font-size: 14px; }
+        .btn-back { background: #7f8c8d; color: white; }
+        .btn-edit { background: #3498db; color: white; }
+        .table-container { margin: 30px; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: right; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: bold; }
+        tr:hover { background: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔍 نتایج جستجو برای: "{{ query }}"</h1>
+        <p>نوع جستجو: {{ search_type }}</p>
+    </div>
+    
+    <div style="margin: 30px;">
+        <a href="/search" class="btn btn-back">← جستجوی جدید</a>
+        <a href="/" class="btn">صفحه اصلی</a>
+    </div>
+    
+    {% if search_type in ['all', 'professors'] %}
+    <div class="table-container">
+        <h3 style="padding: 20px;">اساتید ({{ results.professors|length }} نتیجه)</h3>
+        <table>
+            <tr>
+                <th>نام</th>
+                <th>تخصص</th>
+                <th>تلفن</th>
+                <th>ایمیل</th>
+                <th>عملیات</th>
+            </tr>
+            {% for prof in results.professors %}
+            <tr>
+                <td>{{ prof.first_name }} {{ prof.last_name }}</td>
+                <td>{{ prof.specialty }}</td>
+                <td>{{ prof.phone_number }}</td>
+                <td>{{ prof.email }}</td>
+                <td>
+                    <a href="/professors/edit/{{ prof.professor_id }}" class="btn btn-edit">ویرایش</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+    
+    {% if search_type in ['all', 'students'] %}
+    <div class="table-container">
+        <h3 style="padding: 20px;">دانش‌آموزان ({{ results.students|length }} نتیجه)</h3>
+        <table>
+            <tr>
+                <th>نام</th>
+                <th>کد ملی</th>
+                <th>تلفن</th>
+                <th>شهر</th>
+                <th>عملیات</th>
+            </tr>
+            {% for student in results.students %}
+            <tr>
+                <td>{{ student.first_name }} {{ student.last_name }}</td>
+                <td>{{ student.national_id }}</td>
+                <td>{{ student.phone_number }}</td>
+                <td>{{ student.city }}</td>
+                <td>
+                    <a href="/students/edit/{{ student.membership_id }}" class="btn btn-edit">ویرایش</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+    
+    {% if search_type in ['all', 'courses'] %}
+    <div class="table-container">
+        <h3 style="padding: 20px;">دوره‌ها ({{ results.courses|length }} نتیجه)</h3>
+        <table>
+            <tr>
+                <th>عنوان</th>
+                <th>سطح</th>
+                <th>جلسات</th>
+                <th>وضعیت</th>
+                <th>عملیات</th>
+            </tr>
+            {% for course in results.courses %}
+            <tr>
+                <td>{{ course.course_title }}</td>
+                <td>{{ course.course_level }}</td>
+                <td>{{ course.session_count }}</td>
+                <td>{{ course.course_status }}</td>
+                <td>
+                    <a href="/courses/edit/{{ course.course_id }}" class="btn btn-edit">ویرایش</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+</body>
+</html>

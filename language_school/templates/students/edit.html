@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ویرایش دانش‌آموز</title>
+    <style>
+        /* استایل‌های قبلی را حفظ می‌کنم */
+        body { 
+            font-family: Tahoma, Arial, sans-serif; 
+            background: #f5f5f5; 
+            margin: 0; 
+            padding: 0; 
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+        
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-col {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        .btn-success { background: #27ae60; color: white; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-secondary { background: #7f8c8d; color: white; }
+        .btn-info { background: #3498db; color: white; }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .required::after {
+            content: " *";
+            color: red;
+        }
+        
+        .form-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .container {
+                margin: 10px;
+                padding: 10px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-user-edit"></i> ویرایش دانش‌آموز</h1>
+        <p>ویرایش اطلاعات {{ student.first_name }} {{ student.last_name }}</p>
+    </div>
+    
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="form-container">
+            <form method="POST" id="editStudentForm">
+                <h3 class="section-title"><i class="fas fa-user"></i> اطلاعات شخصی</h3>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="first_name" class="required">نام:</label>
+                            <input type="text" id="first_name" name="first_name" 
+                                   value="{{ student.first_name }}" required
+                                   placeholder="نام دانش‌آموز">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="last_name" class="required">نام خانوادگی:</label>
+                            <input type="text" id="last_name" name="last_name" 
+                                   value="{{ student.last_name }}" required
+                                   placeholder="نام خانوادگی دانش‌آموز">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="national_id" class="required">کد ملی:</label>
+                            <input type="text" id="national_id" name="national_id" 
+                                   value="{{ student.national_id }}" 
+                                   pattern="\d{10}" maxlength="10" required
+                                   placeholder="کد ملی ۱۰ رقمی">
+                            <div class="form-text">۱۰ رقم بدون خط تیره</div>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="birth_date" class="required">تاریخ تولد:</label>
+                            <input type="date" id="birth_date" name="birth_date" 
+                                   value="{{ student.birth_date }}" required>
+                            <div class="form-text">تاریخ تولد را انتخاب کنید</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="phone_number" class="required">شماره تلفن:</label>
+                            <input type="tel" id="phone_number" name="phone_number" 
+                                   value="{{ student.phone_number }}" 
+                                   pattern="09\d{9}" required
+                                   placeholder="مثال: 09123456789">
+                            <div class="form-text">شماره تلفن همراه</div>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="email" class="required">ایمیل:</label>
+                            <input type="email" id="email" name="email" 
+                                   value="{{ student.email }}" required
+                                   placeholder="example@domain.com">
+                            <div class="form-text">ایمیل معتبر وارد کنید</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="section-title"><i class="fas fa-map-marker-alt"></i> اطلاعات آدرس</h3>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="province" class="required">استان:</label>
+                            <input type="text" id="province" name="province" 
+                                   value="{{ student.province }}" required
+                                   placeholder="نام استان">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="city" class="required">شهر:</label>
+                            <input type="text" id="city" name="city" 
+                                   value="{{ student.city }}" required
+                                   placeholder="نام شهر">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="street" class="required">خیابان:</label>
+                            <input type="text" id="street" name="street" 
+                                   value="{{ student.street }}" required
+                                   placeholder="نام خیابان اصلی">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="plaque" class="required">پلاک:</label>
+                            <input type="text" id="plaque" name="plaque" 
+                                   value="{{ student.plaque }}" required
+                                   placeholder="شماره پلاک">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> ذخیره تغییرات
+                    </button>
+                    <a href="{{ url_for('list_students') }}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> انصراف
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('editStudentForm');
+            
+            form.addEventListener('submit', function(e) {
+                // اعتبارسنجی کد ملی
+                const nationalId = document.getElementById('national_id').value;
+                if (!/^\d{10}$/.test(nationalId)) {
+                    e.preventDefault();
+                    alert('کد ملی باید ۱۰ رقم باشد.');
+                    return false;
+                }
+                
+                // اعتبارسنجی شماره تلفن
+                const phone = document.getElementById('phone_number').value;
+                if (!/^09\d{9}$/.test(phone)) {
+                    e.preventDefault();
+                    alert('شماره تلفن باید با 09 شروع شده و ۱۱ رقم باشد.');
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            // اعتبارسنجی لحظه‌ای کد ملی
+            const nationalIdInput = document.getElementById('national_id');
+            nationalIdInput.addEventListener('input', function() {
+                const value = this.value.replace(/\D/g, '');
+                if (value.length > 10) {
+                    this.value = value.slice(0, 10);
+                }
+            });
+            
+            // اعتبارسنجی لحظه‌ای تلفن
+            const phoneInput = document.getElementById('phone_number');
+            phoneInput.addEventListener('input', function() {
+                const value = this.value.replace(/\D/g, '');
+                if (value.length > 11) {
+                    this.value = value.slice(0, 11);
+                }
+                
+                // اگر با 09 شروع نشده باشد، اضافه می‌کنیم
+                if (value.length > 0 && !value.startsWith('09')) {
+                    this.value = '09' + value.slice(2);
+                }
+            });
+        });
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</body>
+</html>

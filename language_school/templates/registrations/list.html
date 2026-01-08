@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لیست ثبت‌نام‌ها</title>
+    <style>
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 2px;
+        }
+        
+        .btn-primary { background: #3498db; color: white; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-info { background: #17a2b8; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-back { background: #7f8c8d; color: white; }
+        .btn-edit { background: #3498db; color: white; } /* همانند صفحه اساتید */
+        .btn-delete { background: #e74c3c; color: white; } /* همانند صفحه اساتید */
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .table th, .table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .table th {
+            background: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .filter-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status-completed { background: #d4edda; color: #155724; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .header-left-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .header-center-title {
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                margin: 10px;
+            }
+            
+            .table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-left-buttons, .header-center-title {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .filter-form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-user-graduate"></i> مدیریت ثبت‌نام‌ها</h1>
+        <p>مدیریت و پیگیری ثبت‌نام‌های دانش‌آموزان</p>
+    </div>
+    
+    <div class="container">
+        <!-- دکمه بازگشت به صفحه اصلی در بالای صفحه (همانند اساتید) -->
+        <div style="margin: 0 0 20px 0;">
+            <a href="{{ url_for('index') }}" class="btn btn-back">← صفحه اصلی</a>
+            <a href="{{ url_for('add_registration') }}" class="btn btn-success">➕ ثبت‌نام جدید</a>
+        </div>
+     
+        <!-- فیلترها -->
+        <div class="card">
+            <h3><i class="fas fa-filter"></i> فیلترها</h3>
+            <form method="GET" class="filter-form">
+                <div class="form-group">
+                    <label for="class_id">کلاس:</label>
+                    <select id="class_id" name="class_id">
+                        <option value="">همه کلاس‌ها</option>
+                        {% for class in classes %}
+                            <option value="{{ class.class_id }}" {% if class_id|string == class.class_id|string %}selected{% endif %}>
+                                {{ class.class_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="student_id">کد دانش‌آموز:</label>
+                    <input type="text" id="student_id" name="student_id" value="{{ student_id or '' }}" placeholder="کد دانش‌آموز">
+                </div>
+                
+                <div class="form-group">
+                    <label for="payment_status">وضعیت پرداخت:</label>
+                    <select id="payment_status" name="payment_status">
+                        <option value="">همه وضعیت‌ها</option>
+                        <option value="تکمیل" {% if payment_status == 'تکمیل' %}selected{% endif %}>تکمیل</option>
+                        <option value="انتظار" {% if payment_status == 'انتظار' %}selected{% endif %}>انتظار</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="align-self: end;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-search"></i> جستجو
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- جدول ثبت‌نام‌ها -->
+        <div class="card">
+            {% if registrations %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>شماره</th>
+                                <th>دانش‌آموز</th>
+                                <th>دوره</th>
+                                <th>استاد</th>
+                                <th>تاریخ ثبت‌نام</th>
+                                <th>مبلغ پرداخت</th>
+                                <th>وضعیت پرداخت</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reg in registrations %}
+                                <tr>
+                                    <td>{{ reg.registration_id }}</td>
+                                    <td>
+                                        <strong>{{ reg.student_name }}</strong><br>
+                                        <small>{{ reg.student_phone }}</small>
+                                    </td>
+                                    <td>
+                                        {{ reg.course_title }}<br>
+                                        <small>{{ reg.course_level }}</small>
+                                    </td>
+                                    <td>{{ reg.professor_name }}</td>
+                                    <td>{{ reg.registration_date.strftime('%Y-%m-%d') if reg.registration_date else '' }}</td>
+                                    <td>
+                                        {% if reg.amount %}
+                                            {{ "{:,.0f}".format(reg.amount) }} تومان
+                                        {% else %}
+                                            <span class="text-muted">ثبت نشده</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if reg.payment_status %}
+                                            <span class="status-badge status-{{ 'completed' if reg.payment_status == 'تکمیل' else 'pending' }}">
+                                                {{ reg.payment_status }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted">ثبت نشده</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="action-buttons">
+                                        {% if not reg.payment_id %}
+                                            <a href="{{ url_for('add_registration_payment', id=reg.registration_id) }}" 
+                                               class="btn btn-warning btn-sm" title="ثبت پرداخت">
+                                                <i class="fas fa-money-bill"></i>
+                                            </a>
+                                        {% endif %}
+                                        <!-- دکمه ویرایش مشابه اساتید -->
+                                        <a href="/registrations/edit/{{ reg.registration_id }}" class="btn btn-edit">ویرایش</a>
+                                        <!-- دکمه حذف مشابه اساتید -->
+                                        <a href="/registrations/delete/{{ reg.registration_id }}" 
+                                           class="btn btn-delete" 
+                                           onclick="return confirm('آیا از حذف ثبت‌نام شماره {{ reg.registration_id }} مطمئن هستید؟')">
+                                           حذف
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="no-data">
+                    <i class="fas fa-info-circle" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
+                    <h3>هیچ ثبت‌نامی یافت نشد</h3>
+                    <p>می‌توانید اولین ثبت‌نام را ایجاد کنید.</p>
+                    <a href="{{ url_for('add_registration') }}" class="btn btn-success">
+                        <i class="fas fa-plus"></i> ایجاد ثبت‌نام جدید
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- نوار ابزار پایین صفحه -->
+        <div class="card" style="text-align: center; margin-top: 20px;">
+            <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <a href="{{ url_for('list_students') }}" class="btn btn-secondary">
+                    <i class="fas fa-users"></i> دانش‌آموزان
+                </a>
+                <a href="{{ url_for('list_classes') }}" class="btn btn-secondary">
+                    <i class="fas fa-chalkboard-teacher"></i> کلاس‌ها
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script>
+        // برای نمایش بهتر در موبایل
+        document.addEventListener('DOMContentLoaded', function() {
+            // افزودن استایل برای حالت موبایل
+            if (window.innerWidth <= 768) {
+                const headerActions = document.querySelector('.header-actions');
+                if (headerActions) {
+                    headerActions.style.flexDirection = 'column';
+                    headerActions.style.gap = '15px';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

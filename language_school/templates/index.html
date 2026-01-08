@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستم مدیریت آموزشگاه زبان</title>
+    <style>
+        * { font-family: Tahoma, Arial; }
+        body { margin: 0; padding: 0; background: #f5f5f5; }
+        
+        /* نوار بالایی */
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .header-content {
+            text-align: center;
+            flex-grow: 1;
+        }
+        
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 5px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            position: absolute;
+            left: 20px;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .logout-btn span {
+            font-size: 14px;
+        }
+        
+        /* بقیه استایل‌ها بدون تغییر... */
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            min-width: 180px;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 40px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        /* منو */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px;
+        }
+        
+        .menu-item {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            display: block;
+            transition: all 0.3s;
+        }
+        
+        .menu-item:hover {
+            background: #2c3e50;
+            color: white;
+            transform: scale(1.02);
+        }
+        
+        .menu-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+        
+        /* جدول */
+        .table-container {
+            margin: 30px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: right;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background: #f9f9f9;
+        }
+        
+        /* دکمه‌ها */
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+        
+        .btn-add { background: #27ae60; color: white; }
+        .btn-edit { background: #3498db; color: white; }
+        .btn-delete { background: #e74c3c; color: white; }
+        .btn-back { background: #7f8c8d; color: white; }
+        
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        /* فرم */
+        .form-container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        /* پیام‌ها */
+        .alert {
+            padding: 15px;
+            margin: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .alert-success { background: #d4edda; color: #155724; }
+        .alert-error { background: #f8d7da; color: #721c24; }
+        
+        /* فوتو */
+        footer {
+            text-align: center;
+            margin: 40px 0;
+            color: #777;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="{{ url_for('logout') }}" class="logout-btn">
+            خروج از سیستم
+        </a>
+        <div class="header-content">
+            <h1>🎓 آموزشگاه زبان فرزانگان</h1>
+        </div>
+    </div>
+    
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.professors }}</div>
+            <div>اساتید</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.students }}</div>
+            <div>دانش‌آموزان</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.courses }}</div>
+            <div>دوره‌ها</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ stats.classes }}</div>
+            <div>کلاس‌ها</div>
+        </div>
+    </div>
+    
+    <div class="menu-grid">
+        <a href="/professors" class="menu-item">
+            <div class="menu-icon">👨‍🏫</div>
+            <h3>مدیریت اساتید</h3>
+            <p>افزودن، ویرایش، حذف اساتید</p>
+        </a>
+        
+        <a href="/students" class="menu-item">
+            <div class="menu-icon">👨‍🎓</div>
+            <h3>مدیریت دانش‌آموزان</h3>
+            <p>افزودن، ویرایش، حذف دانش‌آموزان</p>
+        </a>
+        
+        <a href="/courses" class="menu-item">
+            <div class="menu-icon">📚</div>
+            <h3>مدیریت دوره‌ها</h3>
+            <p>افزودن، ویرایش، حذف دوره‌ها</p>
+        </a>
+        
+        <a href="/classes" class="menu-item">
+            <div class="menu-icon">🏫</div>
+            <h3>مدیریت کلاس‌ها</h3>
+            <p>افزودن، ویرایش، حذف کلاس‌ها</p>
+        </a>
+        
+        <a href="/registrations" class="menu-item">
+            <div class="menu-icon">📝</div>
+            <h3>ثبت‌نام‌ها</h3>
+            <p>مدیریت ثبت‌نام در کلاس‌ها</p>
+        </a>
+        
+        <a href="/search" class="menu-item">
+            <div class="menu-icon">🔍</div>
+            <h3>جستجوی پیشرفته</h3>
+            <p>جستجو در تمام اطلاعات</p>
+        </a>
+    </div>
+    
+    <div class="table-container">
+        <h3 style="padding: 20px; margin: 0;">آخرین ثبت‌نام‌ها</h3>
+        <table>
+            <tr>
+                <th>نام دانش‌آموز</th>
+                <th>تلفن</th>
+                <th>تاریخ ثبت‌نام</th>
+            </tr>
+            {% for reg in recent_registrations %}
+            <tr>
+                <td>{{ reg.first_name }} {{ reg.last_name }}</td>
+                <td>{{ reg.phone_number }}</td>
+                <td>{{ reg.registration_date }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    
+    <footer>
+        <p>سیستم مدیریت آموزشگاه زبان </p>
+        <p> تمامی حقوق محفوظ است</p>
+    </footer>
+    
+    <script>
+        // تأیید قبل از حذف
+        function confirmDelete(item) {
+            return confirm(`آیا مطمئن هستید که می‌خواهید این ${item} را حذف کنید؟`);
+        }
+        
+        // فرمت اعداد
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        
+        // اعمال فرمت به اعداد
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.stat-number').forEach(el => {
+                el.textContent = formatNumber(el.textContent);
+            });
+        });
+    </script>
+</body>
+</html>

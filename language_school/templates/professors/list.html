@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>مدیریت اساتید</title>
+    <style>
+        body { font-family: Tahoma; background: #f5f5f5; margin: 0; padding: 0; }
+        .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }
+        .btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; font-size: 14px; }
+        .btn-add { background: #27ae60; color: white; }
+        .btn-edit { background: #3498db; color: white; }
+        .btn-delete { background: #e74c3c; color: white; }
+        .btn-back { background: #7f8c8d; color: white; }
+        .action-buttons { display: flex; gap: 5px; }
+        .table-container { margin: 30px; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: right; border-bottom: 1px solid #eee; }
+        th { background: #f8f9fa; font-weight: bold; }
+        tr:hover { background: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>👨‍🏫 مدیریت اساتید</h1>
+        <p>افزودن، ویرایش و حذف اساتید</p>
+    </div>
+    
+    <div style="margin: 30px;">
+        <a href="/" class="btn btn-back">← صفحه اصلی</a>
+        <a href="/professors/add" class="btn btn-add">➕ افزودن استاد جدید</a>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>کد</th>
+                <th>نام</th>
+                <th>نام خانوادگی</th>
+                <th>تخصص</th>
+                <th>تلفن</th>
+                <th>ایمیل</th>
+                <th>حقوق (تومان)</th>
+                <th>عملیات</th>
+            </tr>
+            {% for prof in professors %}
+            <tr>
+                <td>{{ prof.professor_id }}</td>
+                <td>{{ prof.first_name }}</td>
+                <td>{{ prof.last_name }}</td>
+                <td>{{ prof.specialty }}</td>
+                <td>{{ prof.phone_number }}</td>
+                <td>{{ prof.email }}</td>
+                <td>{{ "{:,}".format(prof.salary) }}</td>
+                <td class="action-buttons">
+                    <a href="/professors/edit/{{ prof.professor_id }}" class="btn btn-edit">ویرایش</a>
+                    <a href="/professors/delete/{{ prof.professor_id }}" 
+                       class="btn btn-delete" 
+                       onclick="return confirm('آیا از حذف استاد {{ prof.first_name }} {{ prof.last_name }} مطمئن هستید؟')">
+                       حذف
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

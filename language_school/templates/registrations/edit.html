@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>ویرایش ثبت‌نام</title>
+    <style>
+        body { 
+            font-family: Tahoma, Arial, sans-serif; 
+            background: #f5f5f5; 
+            margin: 0; 
+            padding: 0; 
+        }
+        
+        .header { 
+            background: #2c3e50; 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+        }
+        
+        .container { 
+            max-width: 900px; 
+            margin: 30px auto; 
+            padding: 20px; 
+        }
+        
+        .card { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+            margin-bottom: 20px;
+        }
+        
+        .btn { 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            text-decoration: none; 
+            display: inline-block; 
+            font-size: 16px; 
+        }
+        
+        .btn-save { 
+            background: #27ae60; 
+            color: white; 
+        }
+        
+        .btn-back { 
+            background: #7f8c8d; 
+            color: white; 
+        }
+        
+        .btn-info { 
+            background: #17a2b8; 
+            color: white; 
+        }
+        
+        .form-group { 
+            margin-bottom: 20px; 
+        }
+        
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: bold; 
+            color: #333; 
+        }
+        
+        select, input { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            font-size: 16px; 
+            box-sizing: border-box; 
+        }
+        
+        select:focus, input:focus { 
+            border-color: #3498db; 
+            outline: none; 
+        }
+        
+        .info-box { 
+            background: #f8f9fa; 
+            padding: 15px; 
+            border-radius: 5px; 
+            margin-bottom: 20px; 
+            border-right: 4px solid #3498db; 
+        }
+        
+        .info-box p { 
+            margin: 5px 0; 
+            color: #555; 
+        }
+        
+        .form-row { 
+            display: flex; 
+            gap: 20px; 
+            margin-bottom: 20px; 
+        }
+        
+        .form-row .form-group { 
+            flex: 1; 
+        }
+        
+        .payment-section {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border: 1px solid #d1ecf1;
+        }
+        
+        .payment-section h3 {
+            margin-top: 0;
+            color: #0c5460;
+            border-bottom: 2px solid #bee5eb;
+            padding-bottom: 10px;
+        }
+        
+        .payment-info {
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-info p {
+            margin: 8px 0;
+            color: #155724;
+        }
+        
+        @media (max-width: 768px) {
+            .container { 
+                padding: 10px; 
+                margin: 10px; 
+            }
+            
+            .form-row { 
+                flex-direction: column; 
+                gap: 0; 
+            }
+            
+            .card { 
+                padding: 20px; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📝 ویرایش ثبت‌نام و پرداخت</h1>
+        <p>ویرایش اطلاعات ثبت‌نام و مدیریت پرداخت دانش‌آموز</p>
+    </div>
+    
+    <div class="container">
+        <div style="margin-bottom: 20px;">
+            <a href="/registrations" class="btn btn-back">← بازگشت به لیست ثبت‌نام‌ها</a>
+        </div>
+        
+        <div class="card">
+            <!-- اطلاعات فعلی ثبت‌نام -->
+            <div class="info-box">
+                <h3 style="margin-top: 0; color: #2c3e50;">اطلاعات فعلی ثبت‌نام</h3>
+                <p><strong>شماره ثبت‌نام:</strong> {{ registration.registration_id }}</p>
+                <p><strong>دانش‌آموز:</strong> {{ registration.student_name }}</p>
+                <p><strong>تلفن دانش‌آموز:</strong> {{ registration.student_phone }}</p>
+                <p><strong>تاریخ ثبت‌نام:</strong> {{ registration.registration_date.strftime('%Y-%m-%d') if registration.registration_date else '' }}</p>
+            </div>
+            
+            <form method="POST" action="{{ url_for('edit_registration', id=registration.registration_id) }}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="membership_id">دانش‌آموز *</label>
+                        <select id="membership_id" name="membership_id" required>
+                            <option value="">انتخاب دانش‌آموز</option>
+                            {% for student in students %}
+                                <option value="{{ student.membership_id }}" 
+                                    {% if student.membership_id == registration.membership_id %}selected{% endif %}>
+                                    {{ student.full_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="class_id">کلاس *</label>
+                        <select id="class_id" name="class_id" required>
+                            <option value="">انتخاب کلاس</option>
+                            {% for class in classes %}
+                                <option value="{{ class.class_id }}" 
+                                    {% if class.class_id == registration.class_id %}selected{% endif %}>
+                                    {{ class.class_name }} 
+                                    {% if class.registered and class.capacity %}
+                                        ({{ class.registered }}/{{ class.capacity }})
+                                    {% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- بخش مدیریت پرداخت -->
+                <div class="payment-section">
+                    <h3>💰 مدیریت پرداخت</h3>
+                    
+                    {% if registration.amount %}
+                    <div class="payment-info">
+                        <p><strong>پرداخت فعلی:</strong> {{ "{:,.0f}".format(registration.amount) }} تومان</p>
+                        <p><strong>روش پرداخت:</strong> {{ registration.payment_method or 'تعیین نشده' }}</p>
+                        <p><strong>وضعیت:</strong> {{ registration.payment_status or 'تعیین نشده' }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="amount">مبلغ پرداخت (تومان)</label>
+                            <input type="number" id="amount" name="amount" 
+                                   value="{{ registration.amount if registration.amount else '' }}" 
+                                   placeholder="مثال: 1000000">
+                        </div>
+                        
+                        <<select id="payment_method" name="payment_method">
+    <option value="">انتخاب روش</option>
+    <option value="نقد" {% if registration.payment_method == 'نقد' or registration.payment_method == 'نقدی' %}selected{% endif %}>نقد</option>
+    <option value="کارت" {% if registration.payment_method == 'کارت' or registration.payment_method == 'کارت به کارت' %}selected{% endif %}>کارت</option>
+    <option value="انتقال بانکی" {% if registration.payment_method == 'انتقال بانکی' %}selected{% endif %}>انتقال بانکی</option>
+    <option value="آنلاین" {% if registration.payment_method == 'آنلاین' or registration.payment_method == 'پرداخت آنلاین' %}selected{% endif %}>پرداخت آنلاین</option>
+</select>
+                        
+                        <div class="form-group">
+                            <label for="payment_status">وضعیت پرداخت</label>
+                            <select id="payment_status" name="payment_status">
+                                <option value="">انتخاب وضعیت</option>
+                                <option value="انتظار" {% if registration.payment_status == 'انتظار' %}selected{% endif %}>در انتظار</option>
+                                <option value="تکمیل" {% if registration.payment_status == 'تکمیل' %}selected{% endif %}>تکمیل شده</option>
+                                <option value="کنسل" {% if registration.payment_status == 'کنسل' %}selected{% endif %}>کنسل شده</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 15px; color: #666; font-size: 14px;">
+                        <p><strong>راهنمایی:</strong></p>
+                        <ul>
+                            <li>برای ثبت پرداخت جدید، مبلغ و روش پرداخت را وارد کنید</li>
+                            <li>برای ویرایش پرداخت موجود، مقادیر را تغییر دهید</li>
+                            <li>برای حذف پرداخت، مبلغ را 0 یا خالی بگذارید</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+                    <a href="/registrations" class="btn btn-back">انصراف</a>
+                    <button type="submit" class="btn btn-save">ذخیره تغییرات</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- اطلاعات کمک‌کننده -->
+        <div class="card" style="background: #f0f8ff;">
+            <h3 style="margin-top: 0; color: #2c3e50;">راهنمایی</h3>
+            <ul style="color: #555; line-height: 1.6;">
+                <li>می‌توانید دانش‌آموز و کلاس را تغییر دهید.</li>
+                <li>تاریخ ثبت‌نام قابل تغییر نیست.</li>
+                <li>اگر دانش‌آموز قبلاً در کلاس انتخابی ثبت‌نام کرده باشد، امکان ثبت مجدد وجود ندارد.</li>
+                <li>اگر کلاس ظرفیت تکمیل داشته باشد، نمی‌توان آن را انتخاب کرد.</li>
+                <li>می‌توانید در همین صفحه پرداخت را ثبت یا ویرایش کنید.</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

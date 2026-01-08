@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>جستجوی پیشرفته</title>
+    <style>
+        body { font-family: Tahoma; background: #f5f5f5; margin: 0; padding: 0; }
+        .header { background: #e67e22; color: white; padding: 20px; text-align: center; }
+        .form-container { max-width: 600px; margin: 30px auto; background: white; padding: 30px; border-radius: 10px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-back { background: #7f8c8d; color: white; text-decoration: none; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔍 جستجوی پیشرفته</h1>
+        <p>جستجو در تمام اطلاعات سیستم</p>
+    </div>
+    
+    <div class="form-container">
+        <form method="POST">
+            <div class="form-group">
+                <label>عبارت جستجو:</label>
+                <input type="text" name="query" placeholder="نام، تخصص، کد ملی، تلفن..." required>
+            </div>
+            
+            <div class="form-group">
+                <label>نوع جستجو:</label>
+                <select name="type">
+                    <option value="all">همه موارد</option>
+                    <option value="professors">اساتید</option>
+                    <option value="students">دانش‌آموزان</option>
+                    <option value="courses">دوره‌ها</option>
+                </select>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn btn-primary">🔍 شروع جستجو</button>
+                <a href="/" class="btn btn-back">انصراف</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

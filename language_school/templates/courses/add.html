@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>افزودن دوره جدید</title>
+    <style>
+        body { font-family: Tahoma; background: #f5f5f5; margin: 0; padding: 0; }
+        .header { background: #27ae60; color: white; padding: 20px; text-align: center; }
+        .form-container { max-width: 500px; margin: 30px auto; background: white; padding: 30px; border-radius: 10px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-back { background: #7f8c8d; color: white; text-decoration: none; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>➕ افزودن دوره جدید</h1>
+    </div>
+    
+    <div class="form-container">
+        <form method="POST">
+            <div class="form-group">
+                <label>عنوان دوره:</label>
+                <input type="text" name="course_title" required>
+            </div>
+            
+            <div class="form-group">
+                <label>سطح:</label>
+                <select name="course_level" required>
+                    <option value="">انتخاب سطح</option>
+                    <option value="مقدماتی">مقدماتی</option>
+                    <option value="متوسط">متوسط</option>
+                    <option value="پیشرفته">پیشرفته</option>
+                </select>
+            </div>
+   
+            <div class="form-group">
+                <label>تعداد جلسات:</label>
+                <input type="number" name="session_count" required min="1">
+            </div>
+            
+            <div class="form-group">
+                <label>ظرفیت:</label>
+                <input type="number" name="course_capacity" required min="1">
+            </div>
+            
+            <div class="form-group">
+                <label>وضعیت:</label>
+                <select name="course_status">
+                    <option value="فعال">فعال</option>
+                    <option value="غیرفعال">غیرفعال</option>
+                    <option value="تکمیل">تکمیل</option>
+                </select>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" class="btn btn-primary">ثبت دوره</button>
+                <a href="/courses" class="btn btn-back">انصراف</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
