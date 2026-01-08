@@ -85,7 +85,7 @@
 
 #### 1. کلون کردن پروژه
 ```bash
-git clone https://github.com/yourusername/educational-system.git
+git clone [https://github.com/yourusername/educational-system.git](https://github.com/zahramoghaddasi/language_school-Project)
 cd educational-system  
 ```
 #### 2.ایجاد محیط مجازی
